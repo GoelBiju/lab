@@ -1,0 +1,5 @@
+README.txt
+setup.py
+ffvideo/ffmpeg.pxd
+ffvideo/ffvideo.c
+ffvideo/ffvideo.pyx
