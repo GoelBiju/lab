@@ -149,12 +149,27 @@ cdef extern from "libavcodec/avcodec.h":
         uint8_t *data[4]
         int linesize[4]
 
+    # libavcodec.h reference: https://ffmpeg.org/doxygen/0.6/avcodec_8h-source.html
+
+    # The functions to deal with contexts
     AVCodec *avcodec_find_decoder(int id)
+    
+    # Experimental functions
+    # AVCodec *avcodec_find_decoder_by_name(name)
+    # void avcodec_get_context_defaults(AVCodecContext *avctx)
+    # void avcodec_get_context_defaults2(AVCodecContext *avctx, int AVMediaType)
+    # AVCodecContext *avcodec_alloc_context3(AVCodec *codec)
+    # int avcodec_copy_context(AVCodecContext *dest, AVCodecContext *src)
+    
+    # The functions to deal with decoding itself.
     int avcodec_open2(AVCodecContext *avctx, AVCodec *codec, AVDictionary **options)
     int avcodec_decode_video2(AVCodecContext *avctx, AVFrame *picture,
                          int *got_picture_ptr, AVPacket *avpkt) nogil
-    int avpicture_fill(AVPicture *picture, void *ptr, int pix_fmt, int width, int height) nogil
+    # void avcodec_get_frame_defaults(AVFrame *pic)
     AVFrame *avcodec_alloc_frame()
+    
+    # The functions to deal after decoding.
+    int avpicture_fill(AVPicture *picture, void *ptr, int pix_fmt, int width, int height) nogil
     int avpicture_get_size(int pix_fmt, int width, int height)
     int avpicture_layout(AVPicture* src, int pix_fmt, int width, int height,
                      unsigned char *dest, int dest_size)
