@@ -1,2 +1,3 @@
 # labs
-An experimental repository where group members can upload useful code.
+
+An experimental repository where code can be uploaded to fiddle around with and just for the simple benefit of others.

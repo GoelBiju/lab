@@ -284,8 +284,9 @@ cdef class VideoStream:
         self.packet.data = custom_data
         
         print "---> avcodec decode video2 initiated (decoding data in frame)"
-        ret = avcodec_decode_video2(self.codec_ctx, self.picture,
-                                                   &frame_finished, &self.packet)
+        with nogil:
+            ret = avcodec_decode_video2(self.codec_ctx, self.picture,
+                                                       &frame_finished, &self.packet)
                                                    
         print "ret found:", ret
                                                    

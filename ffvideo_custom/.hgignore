@@ -1,0 +1,8 @@
+\.project
+\.pydevproject
+nose.*
+.*\.egg-info
+\.so$
+\.pyc$
+build
+dist
