@@ -1,3 +1,3 @@
-# labs
+# Labs
 
-An experimental repository where code can be uploaded to fiddle around with and just for the simple benefit of others.
+A repository to hold code excerpts of useful code and resources that I have used or created.
