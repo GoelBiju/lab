@@ -1,0 +1,17 @@
+﻿1. Install TLP, Laptop Mode Tools:
+
+	sudo add-apt-repository ppa:linrunner/tlp
+	sudo apt-get update
+	sudo apt-get install tlp tlp-rdw
+	sudo tlp start
+	sudo add-apt-repository ppa:ubuntuhandbook1/apps
+	sudo apt-get update
+	sudo apt-get install laptop-mode-tools
+	- get GUI for further customisation:
+	
+	gksu lmt-config-gui
+
+
+2. Disable bluetooth at startup and after sleep:
+
+	https://forums.linuxmint.com/viewtopic.php?t=208589
