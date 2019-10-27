@@ -9,20 +9,34 @@ const LaunchRequestHandler = {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
     },
     handle(handlerInput) {
-        const speakOutput = 'Welcome, you can say Hello or Help. Which would you like to try?';
+        const speakOutput = 'Hello! I am Cake walk. What is your birthday?';
+        const repromptText = 'I was born Nov. 6th, 2014. When were you born?';
         return handlerInput.responseBuilder
             .speak(speakOutput)
-            .reprompt(speakOutput)
+            .reprompt(repromptText)
             .getResponse();
     }
 };
-const HelloWorldIntentHandler = {
+const CaptureBirthdayIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'HelloWorldIntent';
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'CaptureBirthdayIntent';
     },
-    handle(handlerInput) {
-        const speakOutput = 'Hello World!';
+    async handle(handlerInput) {
+        const year = handlerInput.requestEnvelope.request.intent.slots.year.value;
+        const month = handlerInput.requestEnvelope.request.intent.slots.month.value;
+        const day = handlerInput.requestEnvelope.request.intent.slots.day.value;
+        
+        const attributesManager = handlerInput.attributesManager;
+        const birthdayAttributes = {
+            "year": year,
+            "month": month,
+            "day": day
+        };
+        attributesManager.setPersistentAttributes(birthdayAttributes);
+        await attributesManager.savePersistentAttributes();
+        
+        const speakOutput = `Thanks, I'll remember that your birthday is ${month} ${day} ${year}.`;
         return handlerInput.responseBuilder
             .speak(speakOutput)
             //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
@@ -107,9 +121,12 @@ const ErrorHandler = {
 // payloads to the handlers above. Make sure any new handlers or interceptors you've
 // defined are included below. The order matters - they're processed top to bottom.
 exports.handler = Alexa.SkillBuilders.custom()
+    .withPersistenceAdapter(
+        new persistenceAdapter.S3PersistenceAdapter({bucketName:process.env.S3_PERSISTENCE_BUCKET})
+    )
     .addRequestHandlers(
         LaunchRequestHandler,
-        HelloWorldIntentHandler,
+        CaptureBirthdayIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         SessionEndedRequestHandler,
