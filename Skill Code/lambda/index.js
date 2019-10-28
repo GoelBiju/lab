@@ -31,6 +31,8 @@ const HasBirthdayLaunchRequestHandler = {
     },
     handle(handlerInput) {
 
+        const deviceId = handlerInput.requestEnvelope.context.System.device.deviceId;
+
         const attributesManager = handlerInput.attributesManager;
         const sessionAttributes = attributesManager.getSessionAttributes() || {};
 
@@ -169,6 +171,7 @@ const LoadBirthdayInterceptor = {
 // payloads to the handlers above. Make sure any new handlers or interceptors you've
 // defined are included below. The order matters - they're processed top to bottom.
 exports.handler = Alexa.SkillBuilders.custom()
+    .withApiClient(new Alexa.DefaultApiClient())
     .withPersistenceAdapter(
         new persistenceAdapter.S3PersistenceAdapter({bucketName:process.env.S3_PERSISTENCE_BUCKET})
     )
