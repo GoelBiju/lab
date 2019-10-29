@@ -29,13 +29,24 @@ const HasBirthdayLaunchRequestHandler = {
 
         return handlerInput.requestEnvelope.request.type === 'LaunchRequest' && year && month && day;
     },
-    handle(handlerInput) {
+    async handle(handlerInput) {
 
         const serviceClientFactory = handlerInput.serviceClientFactory;
         const deviceId = handlerInput.requestEnvelope.context.System.device.deviceId;
 
         const attributesManager = handlerInput.attributesManager;
         const sessionAttributes = attributesManager.getSessionAttributes() || {};
+
+        let userTimeZone;
+        try {
+            const upsServiceClient = serviceClientFactory.getUpsServiceClient();
+            userTimeZone = await upsServiceClient.getSystemTimeZone(deviceId);
+        } catch (error) {
+            if (error.name !== 'ServiceError') {
+                return handlerInput.responseBuilder.speak("There was a problem connecting to the service.").getResponse();
+            } 
+            console.log('error', error.message);
+        }
 
         const year = sessionAttributes.hasOwnProperty('year') ? sessionAttributes.year : 0;
         const month = sessionAttributes.hasOwnProperty('month') ? sessionAttributes.month : 0;
