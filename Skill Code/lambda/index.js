@@ -37,6 +37,11 @@ const HasBirthdayLaunchRequestHandler = {
         const attributesManager = handlerInput.attributesManager;
         const sessionAttributes = attributesManager.getSessionAttributes() || {};
 
+        
+        const year = sessionAttributes.hasOwnProperty('year') ? sessionAttributes.year : 0;
+        const month = sessionAttributes.hasOwnProperty('month') ? sessionAttributes.month : 0;
+        const day = sessionAttributes.hasOwnProperty('day') ? sessionAttributes.day : 0;
+
         let userTimeZone;
         try {
             const upsServiceClient = serviceClientFactory.getUpsServiceClient();
@@ -48,13 +53,8 @@ const HasBirthdayLaunchRequestHandler = {
             console.log('error', error.message);
         }
 
-        const year = sessionAttributes.hasOwnProperty('year') ? sessionAttributes.year : 0;
-        const month = sessionAttributes.hasOwnProperty('month') ? sessionAttributes.month : 0;
-        const day = sessionAttributes.hasOwnProperty('day') ? sessionAttributes.day : 0;
+        const oneDay = 24 * 60 * 60 * 1000;
 
-        // TODO: Use the settings API to get current date and then compute how many days
-        //       until the user's birthday.
-        // TODO: Say Happy Birthday on the user's birthday.
         // Getting the current date with the time.
         const currentDateTime = new Date(new Date().toLocaleString("en-US", {timeZone: userTimeZone}));
 
@@ -64,7 +64,7 @@ const HasBirthdayLaunchRequestHandler = {
             currentDateTime.getMonth(), 
             currentDateTime.getDate()
         );
-        const currentYear = currentDate.getFullYear();
+        let currentYear = currentDate.getFullYear();
 
         // Getting the user's next birthday.
         let nextBirthday = Date.parse(`${month} ${day}, ${currentYear}`);
@@ -72,10 +72,8 @@ const HasBirthdayLaunchRequestHandler = {
         // Adjust the nextBirthday by one year if the current date is after their birthday.
         if (currentDate.getTime() > nextBirthday) {
             nextBirthday = Date.parse(`${month} ${day}, ${currentYear + 1}`);
+            currentYear++;
         }
-
-
-        const oneDay = 24 * 60 * 60 * 1000;
 
         // Setting default speakOutput to Happy xth Birthday!
         let speakOutput = `Happy ${currentYear - year}th birthday!`;
