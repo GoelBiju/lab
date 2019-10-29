@@ -58,6 +58,13 @@ const HasBirthdayLaunchRequestHandler = {
         // Getting the current date with the time.
         const currentDateTime = new Date(new Date().toLocaleString("en-US", {timeZone: userTimeZone}));
 
+        // Removing the time from the date because it affects our difference calculation.
+        const currentDate = new Date(
+            currentDateTime.getFullYear(), 
+            currentDateTime.getMonth(), 
+            currentDateTime.getDate()
+        );
+
         const speakOutput = `Welcome back. It looks like there are X more days until your y-th birthday.`;
 
         return handlerInput.responseBuilder
