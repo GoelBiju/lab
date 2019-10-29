@@ -29,20 +29,58 @@ const HasBirthdayLaunchRequestHandler = {
 
         return handlerInput.requestEnvelope.request.type === 'LaunchRequest' && year && month && day;
     },
-    handle(handlerInput) {
+    async handle(handlerInput) {
+
+        const serviceClientFactory = handlerInput.serviceClientFactory;
+        const deviceId = handlerInput.requestEnvelope.context.System.device.deviceId;
 
         const attributesManager = handlerInput.attributesManager;
         const sessionAttributes = attributesManager.getSessionAttributes() || {};
 
+        
         const year = sessionAttributes.hasOwnProperty('year') ? sessionAttributes.year : 0;
         const month = sessionAttributes.hasOwnProperty('month') ? sessionAttributes.month : 0;
         const day = sessionAttributes.hasOwnProperty('day') ? sessionAttributes.day : 0;
 
-        // TODO: Use the settings API to get current date and then compute how many days
-        //       until the user's birthday.
-        // TODO: Say Happy Birthday on the user's birthday.
+        let userTimeZone;
+        try {
+            const upsServiceClient = serviceClientFactory.getUpsServiceClient();
+            userTimeZone = await upsServiceClient.getSystemTimeZone(deviceId);
+        } catch (error) {
+            if (error.name !== 'ServiceError') {
+                return handlerInput.responseBuilder.speak("There was a problem connecting to the service.").getResponse();
+            } 
+            console.log('error', error.message);
+        }
 
-        const speakOutput = `Welcome back. It looks like there are X more days until your y-th birthday.`;
+        const oneDay = 24 * 60 * 60 * 1000;
+
+        // Getting the current date with the time.
+        const currentDateTime = new Date(new Date().toLocaleString("en-US", {timeZone: userTimeZone}));
+
+        // Removing the time from the date because it affects our difference calculation.
+        const currentDate = new Date(
+            currentDateTime.getFullYear(), 
+            currentDateTime.getMonth(), 
+            currentDateTime.getDate()
+        );
+        let currentYear = currentDate.getFullYear();
+
+        // Getting the user's next birthday.
+        let nextBirthday = Date.parse(`${month} ${day}, ${currentYear}`);
+
+        // Adjust the nextBirthday by one year if the current date is after their birthday.
+        if (currentDate.getTime() > nextBirthday) {
+            nextBirthday = Date.parse(`${month} ${day}, ${currentYear + 1}`);
+            currentYear++;
+        }
+
+        // Setting default speakOutput to Happy xth Birthday!
+        let speakOutput = `Happy ${currentYear - year}th birthday!`;
+        if (currentDate.getTime() !== nextBirthday) {
+            const diffDays = Math.round(Math.abs((currentDate.getTime() - nextBirthday)/oneDay));
+            speakOutput = `Welcome back. It looks like there are ${diffDays} days until your ${currentYear - year}th birthday.`;
+        }
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -169,6 +207,7 @@ const LoadBirthdayInterceptor = {
 // payloads to the handlers above. Make sure any new handlers or interceptors you've
 // defined are included below. The order matters - they're processed top to bottom.
 exports.handler = Alexa.SkillBuilders.custom()
+    .withApiClient(new Alexa.DefaultApiClient())
     .withPersistenceAdapter(
         new persistenceAdapter.S3PersistenceAdapter({bucketName:process.env.S3_PERSISTENCE_BUCKET})
     )
