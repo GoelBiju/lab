@@ -31,6 +31,7 @@ const HasBirthdayLaunchRequestHandler = {
     },
     handle(handlerInput) {
 
+        const serviceClientFactory = handlerInput.serviceClientFactory;
         const deviceId = handlerInput.requestEnvelope.context.System.device.deviceId;
 
         const attributesManager = handlerInput.attributesManager;
