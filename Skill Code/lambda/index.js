@@ -55,6 +55,8 @@ const HasBirthdayLaunchRequestHandler = {
         // TODO: Use the settings API to get current date and then compute how many days
         //       until the user's birthday.
         // TODO: Say Happy Birthday on the user's birthday.
+        // Getting the current date with the time.
+        const currentDateTime = new Date(new Date().toLocaleString("en-US", {timeZone: userTimeZone}));
 
         const speakOutput = `Welcome back. It looks like there are X more days until your y-th birthday.`;
 
