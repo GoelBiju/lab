@@ -1,3 +1,6 @@
 # Labs
 
-A repository to hold code excerpts of useful code and resources that I have used or created.
+A repository to hold code excerpts of useful code, resources and tutorials that I have used/created/completed.
+
+### CakeWalk
+
