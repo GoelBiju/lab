@@ -62,6 +62,33 @@ class PokeDetail extends StatelessWidget {
       ),
     ];
 
+    if (pokemon.prevEvolution != null) {
+      infoBuilder.addAll([
+        Text("Previous Evolution",
+          style: TextStyle(
+            fontWeight: FontWeight.bold
+          )
+        ),
+                
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: pokemon.prevEvolution.map((n) => 
+            FilterChip(
+              backgroundColor: Colors.green,
+              // Reverse from the type values object to get 
+              // type strings.
+              label: Text(
+                n.name,
+                style: TextStyle(color: Colors.white)
+              ), 
+              onSelected: (b){},
+            )
+          ).toList(),
+        ),
+      ]);
+    }
+
+
     if (pokemon.nextEvolution != null) {
       infoBuilder.addAll([
         Text("Next Evolution",
