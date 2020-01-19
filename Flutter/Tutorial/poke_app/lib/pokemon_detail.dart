@@ -11,6 +11,7 @@ class PokeDetail extends StatelessWidget {
       Container(
         child: Card(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Text(pokemon.name),
               Text("Height: ${pokemon.height}"),
@@ -20,6 +21,7 @@ class PokeDetail extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: pokemon.type.map((t) => 
                   FilterChip(
+                    backgroundColor: Colors.amber,
                     // Reverse from the type values object to get 
                     // type strings.
                     label: Text(typeValues.reverse[t]), 
@@ -32,9 +34,13 @@ class PokeDetail extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: pokemon.weaknesses.map((t) => 
                   FilterChip(
+                    backgroundColor: Colors.red,
                     // Reverse from the type values object to get 
                     // type strings.
-                    label: Text(typeValues.reverse[t]), 
+                    label: Text(
+                      typeValues.reverse[t],
+                      style: TextStyle(color: Colors.white)
+                    ), 
                     onSelected: (b){},
                   )
                 ).toList(),
@@ -44,9 +50,13 @@ class PokeDetail extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: pokemon.nextEvolution.map((n) => 
                   FilterChip(
+                    backgroundColor: Colors.green,
                     // Reverse from the type values object to get 
                     // type strings.
-                    label: Text(n.name), 
+                    label: Text(
+                      n.name,
+                      style: TextStyle(color: Colors.white)
+                    ), 
                     onSelected: (b){},
                   )
                 ).toList(),
