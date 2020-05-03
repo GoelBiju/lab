@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     Widget titleSection = Container(
@@ -33,7 +32,7 @@ class MyApp extends StatelessWidget {
                   ),
                 ),
               ],
-            ), 
+            ),
           ),
 
           // 3
@@ -41,9 +40,9 @@ class MyApp extends StatelessWidget {
             Icons.star,
             color: Colors.red[500],
           ),
-          Text('41'), 
+          Text('41'),
         ],
-      ),  
+      ),
     );
 
     return MaterialApp(
@@ -52,8 +51,10 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('Flutter Layout Demo'),
         ),
-        body: Center(
-          child: Text('Hello World'),
+        body: Column(
+          children: [
+            titleSection,
+          ],
         ),
       ),
     );
